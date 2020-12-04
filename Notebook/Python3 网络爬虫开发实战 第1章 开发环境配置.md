@@ -60,7 +60,7 @@ print(browser.current_url)
 
 如果输入以上代码后，输出www.baiduc.om则是正常的
 
-## 2.5 aiohttp的安装
+### 2.5 aiohttp的安装
 
 之前介绍的requests库是一个阻塞式HTTP请求库，当我们发出一个请求后，程序会一直等待服务器响应，直到得到响应后，程序才会进行下一步处理。其实，这个过程比较耗费时间。如果程序可以在这个等待过程中做一些其他的事情，如进行请求的调度、响应的处理等，那么爬取效率一定会大大提高。aiohttp就是这样一个提供异步web服务的库，从Python 3.5版本开始，Python中加入了`async/await`关键字，使得回调的写法更加直观和人性化。aiohttp的异步操作借助于`async/await`关键字的写法变得更加简洁，架构更加清晰。
 
@@ -126,7 +126,7 @@ Tesseract是一个开源的ocr引擎，可以开箱即用，项目最初由惠�
    RGB_MODE = 'RGB'
    ```
 
-### 3.4.2 tesseract与pytesserocr的测试
+#### 3.4.2 tesseract与pytesserocr的测试
 
 ```python
 import pytesseract.pytesseract
@@ -161,7 +161,7 @@ print(pytesseract.image_to_string(image))
 2. 根据安装包的流程正常安装即可。
 
 
-## 5. 数据库的安装	
+## 5. 存储库的安装	
 
 数据库提供了存储服务，但如果想要和Python交互的话，还需要安装一些Python存储库，如MySQL需要安装PyMySQL，MongoDB需要安装PyMongo等。
 
@@ -210,6 +210,10 @@ $ pip install redis
 介绍的抓包工具有Charles，mitmproxy和mitndump。一些简单的接口可以通过Charles或mitmproxy分析，找出规律，然后直接用程序模拟来抓取了。但是如果遇到更复杂的接口，就需要利用mitmdump对接Python来对抓取到的请求和响应进行实时处理和保存。另外，既然要做规模采集，就需要自动化App的操作而不是人工去采集，所以这里还需要一个工具叫作Appium，它可以像Selenium一样对App进行自动化控制，如自动化模拟App的点击、下拉等操作。
 
 ### 7.1 Charles的安装
+
+### 7.2 mitmproxy的安装
+
+### 7.3 Appium的安装
 
 ## 8. 爬虫框架的安装
 
@@ -283,15 +287,75 @@ pyspider是国人binux编写的强大的网络爬虫框架，它带有强大的W
 
 ### 8.2 Scrapy 的安装
 
-   安装方式：直接使用Anaconda集成环境
+   安装方式：直接使用Anaconda集成环境。
 
 ### 8.3 Scrapy-Splash 的安装
 
+Scrapy-Splash是一个Scrapy中支持JavaScript渲染的工具。
+Scrapy-Splash的安装分为两部分。一个是Splash服务的安装，具体是通过Docker，安装之后，会启动一个Splash服务，我们可以通过它的接口来实现JavaScript页面的加载。另外一个是Scrapy-Splash的Python库的安装，安装之后即可在Scrapy中使用Splash服务。
 
+1. 安装Scrapy-Splash前必须安装docker，具体见`9.1`。
+
+2. Scrapy-Splash需要在docker运行状态下进行安装：
+
+   ```shell
+   $ docker run -p 8050:8050 scrapinghub/splash
+   ```
+
+3. 在浏览器打开`http://localhost:8050`，若正常弹出则安装成功。
 
 ### 8.4 Scrapy-Redis 的安装  
 
 ```shell
 $ pip install scrapy-redis
 ```
+
+## 9. 部署相关库的安装
+
+如果想要大规模抓取数据，那么一定会用到分布式爬虫。对于分布式爬虫来说，我们需要多台主机，每台主机有多个爬虫任务，但是源代码其实只有一份。此时我们需要做的就是将一份代码同时部署到多台主机上来协同运行，那么怎么去部署就是另一个值得思考的问题对于Scrapy来说，它有一个扩展组件，叫作Scrapyd，我们只需要安装该扩展组件，即可远程管理Scrapy任务，包括部署源码、启动任务、监听任务等。另外，还有Scrapyd-Client和Scrapyd API来帮助我们更方便地完成部署和监听操作。
+另外，还有一种部署方式，那就是Docker集群部署。我们只需要将爬虫制作为Docker镜像，只要主机安装了Docker，就可以直接运行爬虫，而无需再去担心环境配置、版本问题。
+
+### 9.1 Docker的安装
+
+Docker是一种容器技术，可以将应用和环境等进行打包，形成一个独立的、类似于ios的App形式的“应用”。这个应用可以直接被分发到任意一个支持Docker的环境中，通过简单的命令即可启动运行。Docker是一种最流行的容器化实现方案，和虚拟化技术类似，它极大地方便了应用服务的部署；又与虚拟化技术不同，它以一种更轻量的方式实现了应用服务的打包。使用Docker，可以让每个应用彼此相互隔离，在同一台机器上同时运行多个应用，不过它们彼此之间共享同一个操作系统。
+Docker的优势在于，它可以在更细的粒度上进行资源管理，也比虚拟化技术更加节约资源。对于爬虫来说，如果我们需要大规模部署爬虫系统的话，用Docker会大大提高效率。工欲善其事，必先利其器。
+
+1. 在Docker官方网站上下载Docker for Windows，即可双击安装。
+2. 安装后在cmd窗口中运行`docker`，出现正常的命令行则安装成功。
+
+### 9.2 Scrapyd的安装
+
+```shell
+$ pip install scrapyd
+```
+
+Scrapyd主要针对Linux系统，因此不多赘述。
+
+### 9.3 Scrapyd-Clinet的安装
+
+```shell
+$ pip install scrapyd-clinet
+```
+
+### 9.4 Scrapyd API的安装
+
+```shell
+$ pip install python-scrapy-api
+```
+
+### 9.5 Scrapyrt的安装
+
+```shell
+$ pip install scarpyrt
+```
+
+### 9.6 Geraoy的安装
+
+```shell
+$ pip install gerapy
+```
+
+
+
+
 
